@@ -1,0 +1,29 @@
+CREATE VIEW vw_candidates AS
+select c.id, c.name, c.lastname, p.name AS `position`, c.positionId, c.birthdate, 
+c.phone, c.academic_level, c.experience, c.cv, c.job_application, c.place, c.createdAt
+from candidates `c`
+join positions `p` on(c.positionId = p.id)
+WHERE c.status = true
+
+Create View vw_vacants AS
+Select v.id, v.vacancy_title, p.name as position, v.description
+from vacants  `v`
+join positions `p` on(v.positionId = p.id)
+Where v.status = true
+
+Create View vw_evaluations As 
+Select e.id, Concat( c.name, ' ', c.lastname) as Candidato, e.vacantId,
+e.candidateId, e.qualification
+From evaluations `e`
+Join candidates `c` on (e.candidateId = c.id)
+Where e.status = true
+
+Create View vw_report As
+Select v.vacancy_title, e.createdAt,
+Concat( c.name, ' ', c.lastname) as Candidato, e.fa_ability,
+e.fa_level, e.exp_general, e.interview, e.exp_spicify, e.vacantId, 
+(e.fa_ability + e.fa_level + e.exp_general + e.interview + e.exp_spicify) as Qualification
+From evaluations `e`
+Join candidates `c` on (e.candidateId = c.id)
+Join vacants `v` on (e.vacantId = v.id) 
+Where e.status = true
